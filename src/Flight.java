@@ -2,6 +2,7 @@
 
 public class Flight {
     private int seats;
+    private int firstSeatsCount;
     private String destination;
     private String  date;
     private String origin;
@@ -59,6 +60,7 @@ public class Flight {
 
     public Flight(int seats, String destination, String date, String origin, String flightId, String time, int price) {
         this.seats = seats;
+        this.firstSeatsCount = seats;
         this.destination = destination;
         this.date = date;
         this.origin = origin;

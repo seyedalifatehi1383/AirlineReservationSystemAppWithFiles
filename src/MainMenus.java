@@ -25,10 +25,10 @@ public class MainMenus {
             String choose = input.nextLine();
             switch (choose) {
                 case "1":
-                    signInMenu(flightsArrayList, passengersArrayList);
+                    signInMenu(flightsFile, passengersFile);
                     break;
                 case "2":
-                    signUpMenu(passengersArrayList);
+                    signUpMenu(passengersFile);
                     break;
                 case "3":
                     return ;
@@ -43,7 +43,7 @@ public class MainMenus {
 
 
     //    این متد برای منوی ورود به سیستم طراحی شده است
-    public void signInMenu (ArrayList<Flights> flightsArrayList, ArrayList<Passengers> passengersArrayList) {
+    public void signInMenu (RandomAccessFile flightsFile, RandomAccessFile passengersFile) {
         Scanner input = new Scanner(System.in);
         int passengerIndex = 0;
 
@@ -112,7 +112,7 @@ public class MainMenus {
 
 
     //    این متد برای منوی ثبتنام در سیستم طراحی شده است و کاربر نمیتواند با نام کاربری مخصوص ادمین (Admin) و نام های کاربری قبلی در سایت ثبتنام نماید
-    public void signUpMenu (ArrayList<Passengers> passengersArrayList) {
+    public void signUpMenu (RandomAccessFile passengersFile) {
         signUpMenuLoop: while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -159,7 +159,7 @@ public class MainMenus {
                 continue;
             }
 
-            Passengers passenger = new Passengers(username, password, 0, 0) ;
+            Passengers passenger = new Passengers(username, password, 0, 0);
             passengersArrayList.add(passenger);
             System.out.println("\nSigning up Done!!!");
             System.out.println("Press Enter To Return...");
