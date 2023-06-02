@@ -3,17 +3,14 @@ import java.io.RandomAccessFile;
 
 //این کلاس برای مسافر می باشد.
 public class Passenger {
-    static final int USERNAME_SIZE = 40;
+    static final int USERNAME_SIZE = 20;
+    static final int PASSWORD_SIZE = 20;
     private String username;
     private String password;
     private long charge;
 
     //    این ویژگی برای شمردن تعداد دفعات کنسل کردن بلیت ها می باشد.
     //    این ویژگی کاربرد زیادی ندارد و صرفا بدین منظور به وجود امده که بتوان تیکت ایدی منحصر به فرد برای هر بلیت طراحی شود (توضیحات بیشتر در کامنت های موجود در متد booking ticket در کلاس مخصوص مسافران)
-    private int countCancelledTickets;
-
-    private RandomAccessFile ticketIds;
-
     public long getCharge() {
         return charge;
     }
@@ -24,14 +21,6 @@ public class Passenger {
 
     public String getUsername() {
         return username;
-    }
-
-    public int getCountCancelledTickets() {
-        return countCancelledTickets;
-    }
-
-    public void setCountCancelledTickets(int countCancelledTickets) {
-        this.countCancelledTickets = countCancelledTickets;
     }
 
     public void setUsername(String username) {
@@ -54,17 +43,9 @@ public class Passenger {
         this.ticketIds = tickets;
     }
 
-    public Passenger(String username, String password, long charge, int countCancelledTickets) throws FileNotFoundException {
+    public Passenger(String username, String password, long charge) throws FileNotFoundException {
         this.username = username;
         this.password = password;
         this.charge = charge;
-        this.countCancelledTickets = countCancelledTickets;
-
-        String name = "ticketIds";
-        name += "_";
-        name += username;
-        name += ".dat";
-
-        this.ticketIds = new RandomAccessFile(name, "rw");
     }
 }

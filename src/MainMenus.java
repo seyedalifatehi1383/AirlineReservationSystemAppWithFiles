@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -6,9 +7,10 @@ import java.util.Scanner;
 // این کلاس برای منوهای اصلی برنامه می باشد
 public class MainMenus {
     Scanner input = new Scanner(System.in);
+    Admin admin = new Admin();
 
     //    این متد برای صفحه اول برنامه طراحی شده است
-    public void mainMenu(RandomAccessFile flightsFile, RandomAccessFile passengersFile) {
+    public void mainMenu(RandomAccessFile flightsFile, RandomAccessFile passengersFile) throws FileNotFoundException {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -45,6 +47,9 @@ public class MainMenus {
     //    این متد برای منوی ورود به سیستم طراحی شده است
     public void signInMenu (RandomAccessFile flightsFile, RandomAccessFile passengersFile) {
         Scanner input = new Scanner(System.in);
+        Passengers passengers = new Passengers();
+        ArrayList<Passenger> passengersArrayList = new ArrayList<>();
+        ArrayList<Flight> flightsArrayList = new ArrayList<>();
         int passengerIndex = 0;
 
         while (true) {
@@ -85,13 +90,13 @@ public class MainMenus {
             }
 
             if (Objects.equals(username, "Admin") && Objects.equals(password, "Admin")) {
-                adminMenu(flightsArrayList);
+                admin.adminMenu(flightsArrayList);
             }
 
             else {
                 if (!passengersArrayList.isEmpty() && !Objects.equals(username, "Admin")) {
                     if (Objects.equals(passengersArrayList.get(passengerIndex).getPassword(), password)) {
-                        passengersMenu(flightsArrayList, passengersArrayList, passengerIndex);
+                        passengers.passengersMenu(flightsArrayList, passengersArrayList, passengerIndex);
                     }
 
                     else {
@@ -112,7 +117,9 @@ public class MainMenus {
 
 
     //    این متد برای منوی ثبتنام در سیستم طراحی شده است و کاربر نمیتواند با نام کاربری مخصوص ادمین (Admin) و نام های کاربری قبلی در سایت ثبتنام نماید
-    public void signUpMenu (RandomAccessFile passengersFile) {
+    public void signUpMenu (RandomAccessFile passengersFile) throws FileNotFoundException {
+        ArrayList<Passenger> passengersArrayList = new ArrayList<>();
+
         signUpMenuLoop: while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -128,7 +135,7 @@ public class MainMenus {
                 return ;
             }
 
-            for (Passengers passengers : passengersArrayList) {
+            for (Passenger passengers : passengersArrayList) {
                 if (Objects.equals(username, passengers.getUsername())) {
                     System.out.println("\nThis username already exists. Please try another username.");
                     System.out.println("Press Enter To Continue...");
@@ -159,7 +166,7 @@ public class MainMenus {
                 continue;
             }
 
-            Passengers passenger = new Passengers(username, password, 0, 0);
+            Passenger passenger = new Passenger(username, password, 0);
             passengersArrayList.add(passenger);
             System.out.println("\nSigning up Done!!!");
             System.out.println("Press Enter To Return...");
