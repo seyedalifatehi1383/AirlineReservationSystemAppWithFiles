@@ -11,7 +11,7 @@ public class Passenger {
     //    این ویژگی کاربرد زیادی ندارد و صرفا بدین منظور به وجود امده که بتوان تیکت ایدی منحصر به فرد برای هر بلیت طراحی شود (توضیحات بیشتر در کامنت های موجود در متد booking ticket در کلاس مخصوص مسافران)
     private int countCancelledTickets;
 
-    private RandomAccessFile tickets;
+    private RandomAccessFile ticketIds;
 
     public long getCharge() {
         return charge;
@@ -46,11 +46,11 @@ public class Passenger {
     }
 
     public RandomAccessFile getTickets() {
-        return tickets;
+        return ticketIds;
     }
 
     public void setTickets(RandomAccessFile tickets) {
-        this.tickets = tickets;
+        this.ticketIds = tickets;
     }
 
     public Passenger(String username, String password, long charge, int countCancelledTickets) throws FileNotFoundException {
@@ -58,6 +58,12 @@ public class Passenger {
         this.password = password;
         this.charge = charge;
         this.countCancelledTickets = countCancelledTickets;
-        this.tickets = new RandomAccessFile("tickets.dat", "rw");
+
+        String name = "ticketIds";
+        name += "_";
+        name += username;
+        name += ".dat";
+
+        this.ticketIds = new RandomAccessFile(name, "rw");
     }
 }
