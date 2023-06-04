@@ -10,7 +10,7 @@ public class MainMenus {
     Admin admin = new Admin();
 
     //    این متد برای صفحه اول برنامه طراحی شده است
-    public void mainMenu(RandomAccessFile flightsFile, RandomAccessFile passengersFile) throws FileNotFoundException {
+    public void mainMenu(ArrayList<Flight> flightsArrayList, ArrayList<Passenger> passengersArrayList) throws FileNotFoundException {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -27,10 +27,10 @@ public class MainMenus {
             String choose = input.nextLine();
             switch (choose) {
                 case "1":
-                    signInMenu(flightsFile, passengersFile);
+                    signInMenu(flightsArrayList, passengersArrayList);
                     break;
                 case "2":
-                    signUpMenu(passengersFile);
+                    signUpMenu(passengersArrayList);
                     break;
                 case "3":
                     return ;
@@ -45,12 +45,12 @@ public class MainMenus {
 
 
     //    این متد برای منوی ورود به سیستم طراحی شده است
-    public void signInMenu (RandomAccessFile flightsFile, RandomAccessFile passengersFile) {
+    public void signInMenu (ArrayList<Flight> flightsArrayList, ArrayList<Passenger> passengersArrayList) {
         Scanner input = new Scanner(System.in);
         Passengers passengers = new Passengers();
-        ArrayList<Passenger> passengersArrayList = new ArrayList<>();
-        ArrayList<Flight> flightsArrayList = new ArrayList<>();
         int passengerIndex = 0;
+
+
 
         while (true) {
             System.out.print("\033[H\033[2J");
@@ -86,6 +86,7 @@ public class MainMenus {
             String password = input.nextLine();
 
             if (Objects.equals(password, "return")) {
+
                 return ;
             }
 
@@ -117,9 +118,7 @@ public class MainMenus {
 
 
     //    این متد برای منوی ثبتنام در سیستم طراحی شده است و کاربر نمیتواند با نام کاربری مخصوص ادمین (Admin) و نام های کاربری قبلی در سایت ثبتنام نماید
-    public void signUpMenu (RandomAccessFile passengersFile) throws FileNotFoundException {
-        ArrayList<Passenger> passengersArrayList = new ArrayList<>();
-
+    public void signUpMenu (ArrayList<Passenger> passengersArrayList) throws FileNotFoundException {
         signUpMenuLoop: while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();

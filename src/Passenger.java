@@ -3,8 +3,7 @@ import java.io.RandomAccessFile;
 
 //این کلاس برای مسافر می باشد.
 public class Passenger {
-    static final int USERNAME_SIZE = 20;
-    static final int PASSWORD_SIZE = 20;
+    static final int FIX_SIZE = 20;
     private String username;
     private String password;
     private long charge;

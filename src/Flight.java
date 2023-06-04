@@ -1,10 +1,13 @@
 // این کلاس برای اطلاعات پرواز طراحی شده است
 
 public class Flight {
+    static final int FIX_DATE_SIZE = 10;
+    static final int FIX_TIME_SIZE = 5;
+    static final int FIX_NAME_ID_SIZE = 20;
     private int seats;
     private int firstSeatsCount;
     private String destination;
-    private String  date;
+    private String date;
     private String origin;
     private String flightId;
     private String time;

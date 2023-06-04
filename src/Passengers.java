@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -5,19 +6,48 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Passengers {
-    public void writePassengerInfos(ArrayList<Passenger> passengerArrayList, RandomAccessFile passengersFile) {
-        for (int i = 0; i < passengerArrayList.size(); i++) {
+    Scanner input = new Scanner(System.in);
+//    این متد برای مهیا کردن استرینگ برای رایت کردن در فایل می باشد
+    public static String fixStringForWriting(String str){
+        while (str.length() < Passenger.FIX_SIZE)
+            str += " ";
+        return str.substring(0, Passenger.FIX_SIZE);
+    }
 
-            passengersFile.writeChars();
+//    این متد برای خواندن رشته از فایل می باشد
+    public static String readString(RandomAccessFile rfile) throws IOException {
+        String str = "";
+        while (str.length() < Passenger.FIX_SIZE)
+            str += rfile.readChar();
+        return str.trim();
+    }
+
+// این متد برای ثبت اطلاعات در فایل می باشد
+    public void writePassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile) throws IOException {
+        for (Passenger passenger : passengersArrayList) {
+            passengersFile.writeLong(passenger.getCharge()); // 8 byte
+            passengersFile.writeChars(fixStringForWriting(passenger.getUsername())); // 40 byte
+            passengersFile.writeChars(fixStringForWriting(passenger.getPassword())); // 40 byte
+//            88 bytes
         }
     }
 
-    public void readPassengerInfos(ArrayList<Passenger> passengerArrayList, RandomAccessFile passengersFile) {
+// این متد برای پر کردن ارایه از اطلاعات فایل ها می باشد
+    public void readPassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile) throws IOException {
+        String username;
+        String password;
+        long charge;
 
+        for (int i = 0; i < passengersFile.length() / 88; i++) {
+            charge = passengersFile.readLong();
+            username = readString(passengersFile);
+            password = readString(passengersFile);
+            Passenger passenger = new Passenger(username, password, charge);
+            passengersArrayList.set(i, passenger);
+        }
     }
 
     //    این متد برای "منوی اصلی" قسمت مسافران می باشد.
-
     public void passengersMenu (ArrayList<Flight> flightsArrayList, ArrayList<Passenger> passengersArrayList, int passengerIndex) {
         Scanner input = new Scanner(System.in);
         ArrayList<Ticket> ticketsArrayList = new ArrayList<>();
@@ -47,6 +77,7 @@ public class Passengers {
             switch (choose) {
                 case "0" -> {
                     passengersArrayList.get(passengerIndex).setTickets(ticketsArrayList);
+
                     return;
                 }
                 case "1" -> changePassword(passengersArrayList, passengerIndex);
@@ -315,7 +346,7 @@ public class Passengers {
 
 
     //    این متد برای رزرو کردن بلیت می باشد.
-    public void bookingTicket (ArrayList<Flights> flightsArrayList, ArrayList<Passengers> passengersArrayList, ArrayList<Tickets> ticketsArrayList, int passengerIndex) {
+    public void bookingTicket (ArrayList<Flights> flightsArrayList, ArrayList<Passengers> passengersArrayList, ArrayList<Ticket> ticketsArrayList, int passengerIndex) {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
