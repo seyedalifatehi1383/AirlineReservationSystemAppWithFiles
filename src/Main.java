@@ -28,7 +28,7 @@ public class Main {
 
         passengersFile.seek(0);
         ticketIdsFile.seek(0);
-        passengers.readPassengerInfos(passengersArrayList, passengersFile, ticketIdsFile);
+        passengers.readPassengerInfos(passengersArrayList, passengersFile, ticketIdsFile, flightsArrayList);
 
         flightsFile.seek(0);
         flights.readFlightInfos(flightsArrayList, flightsFile);

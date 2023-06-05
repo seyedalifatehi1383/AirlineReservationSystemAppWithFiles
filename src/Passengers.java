@@ -55,11 +55,11 @@ public class Passengers {
     }
 
 // این متد برای پر کردن ارایه از اطلاعات فایل ها می باشد
-    public void readPassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile, RandomAccessFile ticketIdsFile) throws IOException {
+    public void readPassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile, RandomAccessFile ticketIdsFile, ArrayList<Flight> flightsArrayList) throws IOException {
         String username;
         String password;
         long charge;
-        String ticketId = "";
+        String ticketId;
 
         for (int i = 0; i < passengersFile.length() / 88; i++) {
             charge = passengersFile.readLong();
@@ -69,17 +69,47 @@ public class Passengers {
             passengersArrayList.set(i, passenger);
         }
 
-        int temp = 0;
+        int tempI = 0;
+        int tempJ = 0;
         while(ticketIdsFile.getFilePointer() != ticketIdsFile.length()-1) {
+            while(ticketIdsFile.readChar() != ',') {
+                ticketId = readTicketId(ticketIdsFile);
+                Ticket ticket = new Ticket(ticketId, findFlightByTicketId(ticketId, flightsArrayList));
+                passengersArrayList.get(tempI).getTickets().set(tempJ, ticket);
+                tempJ++;
+            }
 
+            tempI++;
+        }
+    }
+
+//    این متد برای پیدا کردن پرواز از طریق تیکت ایدی است
+    public Flight findFlightByTicketId(String ticketId, ArrayList<Flight> flightsArrayList) {
+        String flightId = "";
+        int countAmp = 0;
+        char[] ticketIdCharArray = ticketId.toCharArray();
+        while (countAmp < 2) {
+            for (int i = 0; i < ticketId.length(); i++) {
+                if (ticketIdCharArray[i] == '@') {
+                    countAmp++;
+                    continue;
+                }
+
+                if (countAmp == 2) {
+                    for (int j = 0; j < flightsArrayList.size(); j++) {
+                        if (flightId.equals(flightsArrayList.get(i).getFlightId())) {
+                            return flightsArrayList.get(i);
+                        }
+                    }
+                }
+
+                if (countAmp == 1) {
+                    flightId += ticketIdCharArray[i];
+                }
+            }
         }
 
-//        for (int i = 0; i < passengersArrayList.size(); i++) {
-//            for (int j = 0; j < passengersArrayList.get(i).getTickets().size(); j++) {
-//                readTicketId();
-//                passengersArrayList.get(i).getTickets().get(j).getTicketId() = ;
-//            }
-//        }
+        return null;
     }
 
     //    این متد برای "منوی اصلی" قسمت مسافران می باشد.
