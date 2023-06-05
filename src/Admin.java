@@ -29,16 +29,16 @@ public class Admin {
                 case "0":
                     return ;
                 case "1":
-                    adminMenuMethods.addFlights(flightsArrayList);
+                    addFlights(flightsArrayList);
                     break;
                 case "2":
-                    adminMenuMethods.updateFlights(flightsArrayList);
+                    updateFlights(flightsArrayList);
                     break;
                 case "3":
-                    adminMenuMethods.removeFlights(flightsArrayList);
+                    removeFlights(flightsArrayList);
                     break;
                 case "4":
-                    adminMenuMethods.flightSchedules(flightsArrayList);
+                    flightSchedules(flightsArrayList);
                     break;
                 default:
                     System.out.println("Please check your command!");
@@ -50,12 +50,10 @@ public class Admin {
     }
 
     CheckingEnteredData checkingEnteredData = new CheckingEnteredData();
-    IsEqualNotCaseSensitiveMethod isEqualNotCaseSensitiveMethod = new IsEqualNotCaseSensitiveMethod();
     Scanner input = new Scanner(System.in);
-    MakeCapitalStringMethod makeCapitalStringMethod = new MakeCapitalStringMethod();
 
     //    این متد برای قسمت اول منوی ادمین (اضافه کردن پرواز ها) زراحی شده است.
-    public void addFlights (ArrayList<Flights> flightsArrayList) {
+    public void addFlights (ArrayList<Flight> flightsArrayList) {
         addFlightMenuLoop: while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -72,8 +70,8 @@ public class Admin {
                 return ;
             }
 
-            for (Flights flights : flightsArrayList) {
-                if (Objects.equals(flightId, flights.getFlightId())) {
+            for (Flight flight : flightsArrayList) {
+                if (Objects.equals(flightId, flight.getFlightId())) {
                     System.out.println("\nThis flightId already exists. Please enter another flightId!");
                     System.out.println("Press Enter To Continue...");
                     input.nextLine();
@@ -100,7 +98,7 @@ public class Admin {
                 return ;
             }
 
-            if (isEqualNotCaseSensitiveMethod.isEqualNotCaseSensitive(origin, destination)) {
+            if (origin.equalsIgnoreCase(destination)) {
                 System.out.println("The origin and the destination are same. Please add flight again!");
                 System.out.println("Press Enter To Continue...");
                 input.nextLine();
@@ -169,7 +167,7 @@ public class Admin {
                 continue;
             }
 
-            Flights flight = new Flights(Integer.parseInt(seats), makeCapitalStringMethod.makeCapitalString(destination), date, makeCapitalStringMethod.makeCapitalString(origin), flightId, time, Integer.parseInt(price));
+            Flight flight = new Flight(Integer.parseInt(seats), destination.toUpperCase(), date, origin.toUpperCase(), flightId, time, Integer.parseInt(price), Integer.parseInt(seats));
             flightsArrayList.add(flight);
             System.out.println("Flight added!");
             System.out.println("Press Enter To Return...");
@@ -182,7 +180,7 @@ public class Admin {
 //    به ظاهر در این متد، ایدی پروازی که ادمین وارد می کند بررسی می شود و اگر این ایدی درست بود به متد پایینی منتقل می شود
 //    ولی چون مدیریت قسمت بروزرسانی اطلاعات پرواز در این متد صورت می گیرد و متد پایینی هم زیرمجموعه این متد هست،
 //    من این متد را متد اصلی برای قسمت بروزرسانی اطلاعات پرواز در نظر گرفتم.
-    public void updateFlights (ArrayList<Flights> flightsArrayList) {
+    public void updateFlights (ArrayList<Flight> flightsArrayList) {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -230,7 +228,7 @@ public class Admin {
     }
 
     //    این متد برای منوی انتخاب و تغییر اطلاعات پرواز است.
-    public void updateFlightsChangeOptionsMenu (ArrayList<Flights> flightsArrayList, int flightIndex) {
+    public void updateFlightsChangeOptionsMenu (ArrayList<Flight> flightsArrayList, int flightIndex) {
         UpdateFlightsChangeOptionsMenuMethods updateFlightsChangeOptionsMenuMethods = new UpdateFlightsChangeOptionsMenuMethods();
 
         while (true) {
@@ -294,7 +292,7 @@ public class Admin {
     }
 
     //    این متد برای حذف پروازها می باشد.
-    public void removeFlights (ArrayList<Flights> flightsArrayList) {
+    public void removeFlights (ArrayList<Flight> flightsArrayList) {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -342,7 +340,7 @@ public class Admin {
 
 
     // این متد برای نمایش جدول پروازها می باشد.
-    public void flightSchedules (ArrayList<Flights> flightsArrayList) {
+    public void flightSchedules (ArrayList<Flight> flightsArrayList) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
@@ -357,8 +355,8 @@ public class Admin {
         else {
             System.out.printf("|%-20s|%-13s|%-13s|%-13s|%-9s|%-13s|%-7s|", "FlightId", "Origin", "Destination", "Date", "Time", "Price", "Seats");
             System.out.println("\n................................................................................................");
-            for (Flights flights : flightsArrayList) {
-                System.out.printf(Locale.US, "|%-20s|%-13s|%-13s|%-13s|%-9s|%,-13d|%-7d|", flights.getFlightId(), flights.getOrigin(), flights.getDestination(), flights.getDate(), flights.getTime(), flights.getPrice(), flights.getSeats());
+            for (Flight flight : flightsArrayList) {
+                System.out.printf(Locale.US, "|%-20s|%-13s|%-13s|%-13s|%-9s|%,-13d|%-7d|", flight.getFlightId(), flight.getOrigin(), flight.getDestination(), flight.getDate(), flight.getTime(), flight.getPrice(), flight.getSeats());
                 System.out.println("\n................................................................................................");
             }
         }
@@ -366,4 +364,6 @@ public class Admin {
         System.out.println("Press Enter To Return...");
         input.nextLine();
     }
+
+
 }

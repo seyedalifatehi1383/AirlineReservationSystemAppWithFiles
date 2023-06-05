@@ -61,9 +61,9 @@ public class Flight {
         this.price = price;
     }
 
-    public Flight(int seats, String destination, String date, String origin, String flightId, String time, int price) {
+    public Flight(int seats, String destination, String date, String origin, String flightId, String time, int price, int firstSeatsCount) {
         this.seats = seats;
-        this.firstSeatsCount = seats;
+        this.firstSeatsCount = firstSeatsCount;
         this.destination = destination;
         this.date = date;
         this.origin = origin;
@@ -78,5 +78,13 @@ public class Flight {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public int getFirstSeatsCount() {
+        return firstSeatsCount;
+    }
+
+    public void setFirstSeatsCount(int firstSeatsCount) {
+        this.firstSeatsCount = firstSeatsCount;
     }
 }

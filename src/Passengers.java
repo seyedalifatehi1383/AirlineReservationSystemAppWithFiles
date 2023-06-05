@@ -96,7 +96,7 @@ public class Passengers {
     }
 
     //    این متد برای قسمت تغییر رمز عبور منوی مسافران طراحی شده است
-    public void changePassword (ArrayList<Passengers> passengersArrayList, int passengerIndex) {
+    public void changePassword (ArrayList<Passenger> passengersArrayList, int passengerIndex) {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -148,10 +148,11 @@ public class Passengers {
     }
 
     //    این متد برای قسمت جستجوی بلیت ها در منوی مسافران می باشد.
-    public void searchFlightTickets (ArrayList<Flights> flightsArrayList) {
+    public void searchFlightTickets (ArrayList<Flight> flightsArrayList) {
+        FindFlights findFlights = new FindFlights();
+        CheckingEnteredData checkingEnteredData = new CheckingEnteredData();
 
         while (true) {
-            FindFlights findFlights = new FindFlights();
             System.out.print("\033[H\033[2J");
             System.out.flush();
 
@@ -166,7 +167,7 @@ public class Passengers {
                 return ;
             }
 
-            ArrayList<Flights> foundFlightsArrayList = new ArrayList<>(flightsArrayList);
+            ArrayList<Flight> foundFlightsArrayList = new ArrayList<>(flightsArrayList);
 
             System.out.println("Please enter the wanted filters : ");
             System.out.println("NOTE: If any filter is not important for you, you can type \"ni\" as the wanted filter.");
@@ -333,7 +334,7 @@ public class Passengers {
                 System.out.println("The info(s) of the flight(s) you are looking for is(are) :");
                 System.out.printf("|%-15s|%-13s|%-13s|%-12s|%-8s|%-13s|%-7s|", "FlightId", "Origin", "Destination", "Date", "Time", "Price", "Seats");
                 System.out.println("\n..........................................................................................................................");
-                for (Flights flights : foundFlightsArrayList) {
+                for (Flight flights : foundFlightsArrayList) {
                     System.out.printf(Locale.US, "|%-15s|%-13s|%-13s|%-12s|%-8s|%-13d|%-7d|", flights.getFlightId(), flights.getOrigin(), flights.getDestination(), flights.getDate(), flights.getTime(), flights.getPrice(), flights.getSeats());
                     System.out.println("\n..........................................................................................................................");
                 }
@@ -346,7 +347,7 @@ public class Passengers {
 
 
     //    این متد برای رزرو کردن بلیت می باشد.
-    public void bookingTicket (ArrayList<Flights> flightsArrayList, ArrayList<Passengers> passengersArrayList, ArrayList<Ticket> ticketsArrayList, int passengerIndex) {
+    public void bookingTicket (ArrayList<Flight> flightsArrayList, ArrayList<Passenger> passengersArrayList, ArrayList<Ticket> ticketsArrayList, int passengerIndex) {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -418,7 +419,7 @@ public class Passengers {
                 passengersArrayList.get(passengerIndex).setCharge(chargeAmount);
                 flightsArrayList.get(flightIndex).setSeats(countSeats);
 
-                Tickets ticket = new Tickets(ticketId, flightsArrayList.get(flightIndex));
+                Ticket ticket = new Ticket(ticketId, flightsArrayList.get(flightIndex));
                 ticketsArrayList.add(ticket);
 
                 System.out.println("Ticket booked.");
@@ -432,7 +433,7 @@ public class Passengers {
 
 
     //    این متد برای نمایش بلیت های رزرو شده می باشد.
-    public void bookedTickets (ArrayList<Tickets> ticketsArrayList) {
+    public void bookedTickets (ArrayList<Ticket> ticketsArrayList) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
@@ -447,7 +448,7 @@ public class Passengers {
         else {
             System.out.printf("|%-25s|%-15s|%-13s|%-13s|%-12s|%-8s|%-15s|", "TicketId", "FlightId", "Origin", "Destination", "Date", "Time", "Amount Paid");
             System.out.println("\n.......................................................................................................................");
-            for (Tickets tickets : ticketsArrayList) {
+            for (Ticket tickets : ticketsArrayList) {
                 System.out.printf(Locale.US, "|%-25s|%-15s|%-13s|%-13s|%-12s|%-8s|%-,15d|", tickets.getTicketId(), tickets.getFlightInfo().getFlightId(), tickets.getFlightInfo().getOrigin(), tickets.getFlightInfo().getDestination(), tickets.getFlightInfo().getDate(), tickets.getFlightInfo().getTime(), tickets.getFlightInfo().getPrice());
                 System.out.println("\n.......................................................................................................................");
             }
@@ -459,7 +460,9 @@ public class Passengers {
 
 
     //    این متد برای اینه که مسافر یتونه حسابشو شارژ کنه.
-    public void addCharge (ArrayList<Passengers> passengersArrayList, int passengerIndex) {
+    public void addCharge (ArrayList<Passenger> passengersArrayList, int passengerIndex) {
+        CheckingEnteredData checkingEnteredData = new CheckingEnteredData();
+
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -496,7 +499,7 @@ public class Passengers {
 
 
     //   این متد برای کنسل کردن بلیت مورد استفاده قرار می گیرد.
-    public void ticketCancellation (ArrayList<Passengers> passengersArrayList, ArrayList<Tickets> ticketsArrayList, int passengerIndex) {
+    public void ticketCancellation (ArrayList<Passenger> passengersArrayList, ArrayList<Ticket> ticketsArrayList, int passengerIndex) {
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();

@@ -15,19 +15,32 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws IOException {
         MainMenus mainMenus = new MainMenus();
+
         RandomAccessFile flightsFile = new RandomAccessFile("flightsFile.dat", "rw");
         RandomAccessFile passengersFile = new RandomAccessFile("passengersFile.dat", "rw");
         RandomAccessFile ticketFile = new RandomAccessFile("ticketsFile.dat", "rw");
+
         Passengers passengers = new Passengers();
-        ArrayList<Flight> flightsArrayList = new ArrayList<>();
+        Flights flights = new Flights();
+
         ArrayList<Passenger> passengersArrayList  = new ArrayList<>();
+        ArrayList<Flight> flightsArrayList = new ArrayList<>();
 
         passengersFile.seek(0);
         passengers.readPassengerInfos(passengersArrayList, passengersFile);
 
+        flightsFile.seek(0);
+        flights.readFlightInfos(flightsArrayList, flightsFile);
+
         mainMenus.mainMenu(flightsArrayList, passengersArrayList);
 
-        flightsFile.close();
+        passengersFile.seek(0);
+        passengers.writePassengerInfos(passengersArrayList, passengersFile);
+
+        flightsFile.seek(0);
+        flights.writeFlightInfos(flightsArrayList, flightsFile);
+
         passengersFile.close();
+        flightsFile.close();
     }
 }
