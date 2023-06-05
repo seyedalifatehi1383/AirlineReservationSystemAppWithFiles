@@ -18,7 +18,7 @@ public class Main {
 
         RandomAccessFile flightsFile = new RandomAccessFile("flightsFile.dat", "rw");
         RandomAccessFile passengersFile = new RandomAccessFile("passengersFile.dat", "rw");
-        RandomAccessFile ticketFile = new RandomAccessFile("ticketsFile.dat", "rw");
+        RandomAccessFile ticketIdsFile = new RandomAccessFile("ticketIdsFile.dat", "rw");
 
         Passengers passengers = new Passengers();
         Flights flights = new Flights();
@@ -27,7 +27,8 @@ public class Main {
         ArrayList<Flight> flightsArrayList = new ArrayList<>();
 
         passengersFile.seek(0);
-        passengers.readPassengerInfos(passengersArrayList, passengersFile);
+        ticketIdsFile.seek(0);
+        passengers.readPassengerInfos(passengersArrayList, passengersFile, ticketIdsFile);
 
         flightsFile.seek(0);
         flights.readFlightInfos(flightsArrayList, flightsFile);
@@ -35,11 +36,13 @@ public class Main {
         mainMenus.mainMenu(flightsArrayList, passengersArrayList);
 
         passengersFile.seek(0);
-        passengers.writePassengerInfos(passengersArrayList, passengersFile);
+        ticketIdsFile.seek(0);
+        passengers.writePassengerInfos(passengersArrayList, passengersFile, ticketIdsFile);
 
         flightsFile.seek(0);
         flights.writeFlightInfos(flightsArrayList, flightsFile);
 
+        ticketIdsFile.close();
         passengersFile.close();
         flightsFile.close();
     }

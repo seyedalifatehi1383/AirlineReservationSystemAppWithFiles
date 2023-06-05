@@ -8,6 +8,7 @@ public class Passenger {
     private String username;
     private String password;
     private long charge;
+    static int countCancelledTickets = 0;
     private ArrayList<Ticket> tickets;
 
     public ArrayList<Ticket> getTickets() {

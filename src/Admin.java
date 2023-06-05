@@ -293,7 +293,7 @@ public class Admin {
 
     //    این متد برای حذف پروازها می باشد.
     public void removeFlights (ArrayList<Flight> flightsArrayList) {
-        while (true) {
+        removeFlightsLoop: while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
 
@@ -316,6 +316,13 @@ public class Admin {
                 boolean flag = false;
                 for (int i = 0; i < flightsArrayList.size(); i++) {
                     if (Objects.equals(flightId, flightsArrayList.get(i).getFlightId())) {
+                        if (flightsArrayList.get(i).getFirstSeatsCount() != flightsArrayList.get(i).getSeats()) {
+                            System.out.println("Sorry! You cannot delete this flight!");
+                            System.out.println("Press Enter To Continue...");
+                            input.nextLine();
+                            continue removeFlightsLoop;
+                        }
+
                         flag = true;
                         flightsArrayList.remove(i);
                         break;

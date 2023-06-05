@@ -7,8 +7,6 @@ import java.util.Scanner;
 public class UpdateFlightsChangeOptionsMenuMethods {
     Scanner input = new Scanner(System.in);
     CheckingEnteredData checkingEnteredData = new CheckingEnteredData();
-    IsEqualNotCaseSensitiveMethod isEqualNotCaseSensitiveMethod = new IsEqualNotCaseSensitiveMethod();
-    MakeCapitalStringMethod makeCapitalStringMethod = new MakeCapitalStringMethod();
 
     public void updateFlightId (ArrayList<Flight> flightsArrayList, int flightIndex) {
         updateFlightIdLoop: while (true) {
@@ -59,7 +57,7 @@ public class UpdateFlightsChangeOptionsMenuMethods {
                 return ;
             }
 
-            if (isEqualNotCaseSensitiveMethod.isEqualNotCaseSensitive(flightsArrayList.get(flightIndex).getDestination(), newOrigin)) {
+            if (newOrigin.equalsIgnoreCase(flightsArrayList.get(flightIndex).getDestination())) {
                 System.out.println("New origin and destination cannot be equals. Please enter another new origin.");
                 System.out.println("Press Enter To Continue...");
                 input.nextLine();
@@ -73,7 +71,7 @@ public class UpdateFlightsChangeOptionsMenuMethods {
                 continue;
             }
 
-            flightsArrayList.get(flightIndex).setOrigin(makeCapitalStringMethod.makeCapitalString(newOrigin));
+            flightsArrayList.get(flightIndex).setOrigin(newOrigin.toUpperCase());
             System.out.println("Origin changed!");
             System.out.println("Press Enter To Return...");
             input.nextLine();

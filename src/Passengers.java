@@ -6,37 +6,60 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Passengers {
+//    این متد برای مهیا کردن تیکت ایدی برای نوشتن در فایل می باشد
+    public String fixTicketIdForWriting(String ticketId) {
+        while (ticketId.length() < Ticket.FIX_TICKET_ID_SIZE)
+            ticketId += " ";
+        return ticketId.substring(0, Ticket.FIX_TICKET_ID_SIZE);
+    }
+
+//    این متد برای خواندن تیکت ایدی می باشد
+    public String readTicketId(RandomAccessFile ticketIdsFile) throws IOException {
+        String str = "";
+        while (str.length() < Ticket.FIX_TICKET_ID_SIZE)
+            str += ticketIdsFile.readChar();
+        return str.trim();
+    }
+
+//    این متد برای خواندن بقیه رشته ها از فایل می باشد
+    public String readString(RandomAccessFile passengersFile) throws IOException {
+        String str = "";
+        while (str.length() < Passenger.FIX_SIZE)
+            str += passengersFile.readChar();
+        return str.trim();
+    }
     Scanner input = new Scanner(System.in);
-//    این متد برای مهیا کردن استرینگ برای رایت کردن در فایل می باشد
-    public static String fixStringForWriting(String str){
+//    این متد برای مهیا کردن بقیه استرینگ ها برای رایت کردن در فایل می باشد
+
+    public String fixStringForWriting(String str) {
         while (str.length() < Passenger.FIX_SIZE)
             str += " ";
         return str.substring(0, Passenger.FIX_SIZE);
     }
 
-//    این متد برای خواندن رشته از فایل می باشد
-    public static String readString(RandomAccessFile rfile) throws IOException {
-        String str = "";
-        while (str.length() < Passenger.FIX_SIZE)
-            str += rfile.readChar();
-        return str.trim();
-    }
-
 // این متد برای ثبت اطلاعات در فایل می باشد
-    public void writePassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile) throws IOException {
+    public void writePassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile, RandomAccessFile ticketIdsFile) throws IOException {
         for (Passenger passenger : passengersArrayList) {
             passengersFile.writeLong(passenger.getCharge()); // 8 byte
             passengersFile.writeChars(fixStringForWriting(passenger.getUsername())); // 40 byte
             passengersFile.writeChars(fixStringForWriting(passenger.getPassword())); // 40 byte
 //            88 bytes
+
+            for (int i = 0; i < passenger.getTickets().size(); i++) {
+                ticketIdsFile.writeChars(fixTicketIdForWriting(passenger.getTickets().get(i).getTicketId())); // 120 bytes
+            }
+
+            ticketIdsFile.writeChar(','); // 2 bytes
+//            total = 122 bytes
         }
     }
 
 // این متد برای پر کردن ارایه از اطلاعات فایل ها می باشد
-    public void readPassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile) throws IOException {
+    public void readPassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile, RandomAccessFile ticketIdsFile) throws IOException {
         String username;
         String password;
         long charge;
+        String ticketId = "";
 
         for (int i = 0; i < passengersFile.length() / 88; i++) {
             charge = passengersFile.readLong();
@@ -45,6 +68,18 @@ public class Passengers {
             Passenger passenger = new Passenger(username, password, charge);
             passengersArrayList.set(i, passenger);
         }
+
+        int temp = 0;
+        while(ticketIdsFile.getFilePointer() != ticketIdsFile.length()-1) {
+
+        }
+
+//        for (int i = 0; i < passengersArrayList.size(); i++) {
+//            for (int j = 0; j < passengersArrayList.get(i).getTickets().size(); j++) {
+//                readTicketId();
+//                passengersArrayList.get(i).getTickets().get(j).getTicketId() = ;
+//            }
+//        }
     }
 
     //    این متد برای "منوی اصلی" قسمت مسافران می باشد.
@@ -192,7 +227,7 @@ public class Passengers {
                 return ;
             }
 
-            if (isEqualNotCaseSensitiveMethod.isEqualNotCaseSensitive(origin, destination) && !origin.equals("ni")) {
+            if (origin.equalsIgnoreCase(destination) && !origin.equals("ni")) {
                 System.out.println("Origin and destination cannot be equals. Please search again!");
                 System.out.println("Press Enter To Continue...");
                 input.nextLine();
@@ -448,8 +483,8 @@ public class Passengers {
         else {
             System.out.printf("|%-25s|%-15s|%-13s|%-13s|%-12s|%-8s|%-15s|", "TicketId", "FlightId", "Origin", "Destination", "Date", "Time", "Amount Paid");
             System.out.println("\n.......................................................................................................................");
-            for (Ticket tickets : ticketsArrayList) {
-                System.out.printf(Locale.US, "|%-25s|%-15s|%-13s|%-13s|%-12s|%-8s|%-,15d|", tickets.getTicketId(), tickets.getFlightInfo().getFlightId(), tickets.getFlightInfo().getOrigin(), tickets.getFlightInfo().getDestination(), tickets.getFlightInfo().getDate(), tickets.getFlightInfo().getTime(), tickets.getFlightInfo().getPrice());
+            for (Ticket ticket : ticketsArrayList) {
+                System.out.printf(Locale.US, "|%-25s|%-15s|%-13s|%-13s|%-12s|%-8s|%-,15d|", ticket.getTicketId(), ticket.getFlightInfo().getFlightId(), ticket.getFlightInfo().getOrigin(), ticket.getFlightInfo().getDestination(), ticket.getFlightInfo().getDate(), ticket.getFlightInfo().getTime(), ticket.getFlightInfo().getPrice());
                 System.out.println("\n.......................................................................................................................");
             }
         }
@@ -533,9 +568,7 @@ public class Passengers {
                     countSeats++;
                     ticketsArrayList.get(i).getFlightInfo().setSeats(countSeats);
 
-                    int countCancelledSeats = passengersArrayList.get(passengerIndex).getCountCancelledTickets();
-                    countCancelledSeats++;
-                    passengersArrayList.get(passengerIndex).setCountCancelledTickets(countCancelledSeats);
+                    Passenger.countCancelledTickets++;
 
                     ticketsArrayList.remove(i);
 
