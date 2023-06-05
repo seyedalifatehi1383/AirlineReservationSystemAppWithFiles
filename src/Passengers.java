@@ -69,17 +69,21 @@ public class Passengers {
             passengersArrayList.set(i, passenger);
         }
 
-        int tempI = 0;
-        int tempJ = 0;
+        long temp;
+        int i = 0;
+        int j = 0;
         while(ticketIdsFile.getFilePointer() != ticketIdsFile.length()-1) {
             while(ticketIdsFile.readChar() != ',') {
                 ticketId = readTicketId(ticketIdsFile);
                 Ticket ticket = new Ticket(ticketId, findFlightByTicketId(ticketId, flightsArrayList));
-                passengersArrayList.get(tempI).getTickets().set(tempJ, ticket);
-                tempJ++;
+                passengersArrayList.get(i).getTickets().set(j, ticket);
+                j++;
             }
 
-            tempI++;
+            temp = ticketIdsFile.getFilePointer();
+            temp++;
+            ticketIdsFile.seek(temp);
+            i++;
         }
     }
 
