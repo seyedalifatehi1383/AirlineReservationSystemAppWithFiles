@@ -39,6 +39,8 @@ public class Passengers {
 
 // این متد برای ثبت اطلاعات در فایل می باشد
     public void writePassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile, RandomAccessFile ticketIdsFile) throws IOException {
+        ticketIdsFile.seek(0);
+
         for (Passenger passenger : passengersArrayList) {
             passengersFile.writeLong(passenger.getCharge()); // 8 byte
             passengersFile.writeInt(passenger.getCountBookedTickets()); // 8 bytes
@@ -71,7 +73,7 @@ public class Passengers {
 
         int i = 0;
         int j = 0;
-        while(ticketIdsFile.getFilePointer() != ticketIdsFile.length()-1) {
+        while(ticketIdsFile.getFilePointer() < ticketIdsFile.length()-1) {
             while(j < passengersArrayList.get(i).getCountBookedTickets()) {
                 ticketId = readTicketId(ticketIdsFile);
                 Ticket ticket = new Ticket(ticketId, findFlightByTicketId(ticketId, flightsArrayList));
