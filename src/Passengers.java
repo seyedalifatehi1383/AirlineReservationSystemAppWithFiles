@@ -41,16 +41,14 @@ public class Passengers {
     public void writePassengerInfos(ArrayList<Passenger> passengersArrayList, RandomAccessFile passengersFile, RandomAccessFile ticketIdsFile) throws IOException {
         for (Passenger passenger : passengersArrayList) {
             passengersFile.writeLong(passenger.getCharge()); // 8 byte
+            passengersFile.writeInt(passenger.getCountBookedTickets()); // 8 bytes
             passengersFile.writeChars(fixStringForWriting(passenger.getUsername())); // 40 byte
             passengersFile.writeChars(fixStringForWriting(passenger.getPassword())); // 40 byte
-//            88 bytes
+//            96 bytes
 
             for (int i = 0; i < passenger.getTickets().size(); i++) {
                 ticketIdsFile.writeChars(fixTicketIdForWriting(passenger.getTickets().get(i).getTicketId())); // 120 bytes
             }
-
-            ticketIdsFile.writeChar(','); // 2 bytes
-//            total = 122 bytes
         }
     }
 
@@ -60,29 +58,28 @@ public class Passengers {
         String password;
         long charge;
         String ticketId;
+        int countBookedTickets;
 
-        for (int i = 0; i < passengersFile.length() / 88; i++) {
+        for (int i = 0; i < passengersFile.length() / 96; i++) {
             charge = passengersFile.readLong();
+            countBookedTickets = passengersFile.readInt();
             username = readString(passengersFile);
             password = readString(passengersFile);
-            Passenger passenger = new Passenger(username, password, charge);
+            Passenger passenger = new Passenger(username, password, charge, countBookedTickets);
             passengersArrayList.set(i, passenger);
         }
 
-        long temp;
         int i = 0;
         int j = 0;
         while(ticketIdsFile.getFilePointer() != ticketIdsFile.length()-1) {
-            while(ticketIdsFile.readChar() != ',') {
+            while(j < passengersArrayList.get(i).getCountBookedTickets()) {
                 ticketId = readTicketId(ticketIdsFile);
                 Ticket ticket = new Ticket(ticketId, findFlightByTicketId(ticketId, flightsArrayList));
                 passengersArrayList.get(i).getTickets().set(j, ticket);
                 j++;
             }
 
-            temp = ticketIdsFile.getFilePointer();
-            temp++;
-            ticketIdsFile.seek(temp);
+            j = 0;
             i++;
         }
     }
@@ -491,6 +488,10 @@ public class Passengers {
                 Ticket ticket = new Ticket(ticketId, flightsArrayList.get(flightIndex));
                 ticketsArrayList.add(ticket);
 
+                int countBookedTickets = passengersArrayList.get(passengerIndex).getCountBookedTickets();
+                countBookedTickets++;
+                passengersArrayList.get(passengerIndex).setCountBookedTickets(countBookedTickets);
+
                 System.out.println("Ticket booked.");
                 System.out.println("Your ticketId is : " + ticketId);
                 System.out.println("Press Enter To Return...");
@@ -605,6 +606,10 @@ public class Passengers {
                     Passenger.countCancelledTickets++;
 
                     ticketsArrayList.remove(i);
+
+                    int countBookedTickets = passengersArrayList.get(passengerIndex).getCountBookedTickets();
+                    countBookedTickets--;
+                    passengersArrayList.get(passengerIndex).setCountBookedTickets(countBookedTickets);
 
                     System.out.println("Ticket canceled!");
                     System.out.println("Press Enter To Return...");

@@ -10,6 +10,7 @@ public class Passenger {
     private long charge;
     static int countCancelledTickets = 0;
     private ArrayList<Ticket> tickets;
+    private int countBookedTickets;
 
     public ArrayList<Ticket> getTickets() {
         return tickets;
@@ -45,9 +46,18 @@ public class Passenger {
         this.password = password;
     }
 
-    public Passenger(String username, String password, long charge) throws FileNotFoundException {
+    public int getCountBookedTickets() {
+        return countBookedTickets;
+    }
+
+    public void setCountBookedTickets(int countBookedTickets) {
+        this.countBookedTickets = countBookedTickets;
+    }
+
+    public Passenger(String username, String password, long charge, int countBookedTickets) throws FileNotFoundException {
         this.username = username;
         this.password = password;
         this.charge = charge;
+        this.countBookedTickets = countBookedTickets;
     }
 }
